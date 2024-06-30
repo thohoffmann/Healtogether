@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://www.healtogether.org.uk/sitemap_location.xml
