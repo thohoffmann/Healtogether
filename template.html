@@ -128,10 +128,35 @@
             <!-- Instagram Feed Section -->
             <div class="container mt-5 mb-5">
                 <h2 class="text-center mb-4">Follow Us on Instagram</h2>
-                <!-- Instagram Feed -->
-                <!-- Using Instagram Basic Display API -->
-                <script src="https://www.instagram.com/embed.js"></script>
-                <iframe src="//lightwidget.com/widgets/healtogethercic" scrolling="no" allowtransparency="true" class="lightwidget-widget" style="width:100%;border:0;overflow:hidden;"></iframe>
+                <!-- Instagram Feed using Instagram Graph API -->
+                <div id="instagram-feed" class="row">
+                    <!-- Instagram feed will be populated here -->
+                </div>
+                <script>
+                    // Instagram Graph API configuration
+                    const accessToken = 'YOUR_INSTAGRAM_ACCESS_TOKEN';
+                    const userId = 'YOUR_INSTAGRAM_USER_ID';
+                    
+                    // Fetch Instagram posts
+                    fetch(`https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&access_token=${accessToken}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const feed = document.getElementById('instagram-feed');
+                            data.data.slice(0, 6).forEach(post => {
+                                const postElement = document.createElement('div');
+                                postElement.className = 'col-md-4 col-sm-6 mb-4';
+                                postElement.innerHTML = `
+                                    <a href="${post.permalink}" target="_blank" class="instagram-post">
+                                        <img src="${post.media_type === 'VIDEO' ? post.thumbnail_url : post.media_url}" 
+                                             alt="${post.caption ? post.caption.substring(0, 100) : 'Instagram post'}"
+                                             class="img-fluid rounded shadow-sm">
+                                    </a>
+                                `;
+                                feed.appendChild(postElement);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching Instagram feed:', error));
+                </script>
                 <div class="text-center mt-3">
                     <a href="https://www.instagram.com/healtogethercic" class="btn btn-primary">Follow Us on Instagram</a>
                 </div>
